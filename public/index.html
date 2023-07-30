@@ -6,6 +6,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
+      body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+}
+
+main {
+  padding: 2rem;
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+#task-list {
+  border-bottom: 1px solid #ccc;
+}
+
+#task-form label,
+#task-form input,
+#task-form textarea,
+#task-form select,
+#task-form button {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
         .comment {
             border: 1px solid black;
             margin-top: 1rem;
@@ -28,9 +74,87 @@
 <body onload="getAllPost()">
 
 
-    <h1>My post CRUD app </h1>
+  <header>
+    <h1>Task Management App</h1>
+  </header>
+  
+  <main>
+    <section id="task-list">
+      <h2>Task List</h2>
+      <div id="posts"></div>
+      <br>
+      <div id="result"></div>
+    </section>
+    
+    <section id="add-task">
+      <h2>Add Task</h2>
+      <form id="task-form" onsubmit="createPost(); return false">
+        <label for="posttitle">Task Title:</label>
+        <input type="text" id="postTitle" required>
+        
+        <label for="postText">Description:</label>
+        <textarea rows="4" id="postText" required></textarea>
+        
+        <label for="due-date">Due Date:</label>
+        <input type="date" id="duedate" required>
+        
+        <label for="priority">Priority:</label>
+        <select id="priority" required>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+        
+        <button type="submit">Add Task</button>
+      </form>
+    </section>
+  </main>
 
-    <form onsubmit="createPost(); return false">
+    <!-- <header>
+    <h1>Task Management App</h1>
+</header>
+  
+  <main>
+    <section id="task-list">
+      <h2>Task List</h2>
+      <ul id="tasks" id="posts">
+        List of tasks will be dynamically populated here
+      </ul>
+      <div id="posts"></div>
+      <br>
+    <br>
+    <div id="result"></div>
+    </section>
+    
+    <section id="add-task" >
+      <h2>Add Task</h2>
+      <form id="task-form" onsubmit="createPost(); return false">
+        <label for="posttitle">Task Title:</label>
+        <input type="text"  id="postTitle">
+        
+        <label for="postText">Description:</label>
+        <textarea rows="4" id="postText"></textarea>
+        
+        <label for="due-date">Due Date:</label>
+        <input type="date" id="duedate">
+        
+        <label for="priority">Priority:</label>
+        <select id="priority">
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+        
+        <button type="submit">Add Task</button>
+      </form>
+    </section>
+  </main>
+   -->
+
+
+    <!-- <h1>My post CRUD app </h1>
+
+    <form>
 
         <h2>Create a post:</h2>
 
@@ -53,25 +177,60 @@
     <div id="result"></div>
     <br>
     <br>
-    <div id="posts"></div>
+    <div id="posts"></div> -->
 
 
 
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.js"></script>
 
-    <script type="module" src="app.mjs"></script>
+  
     <script type="module">
+
+// const taskForm = document.getElementById('task-form');
+// const taskList = document.getElementById('tasks');
+
+// taskForm.addEventListener('submit', function(event) {
+//   event.preventDefault();
+
+//   const title = document.getElementById('title').value;
+//   const description = document.getElementById('description').value;
+//   const dueDate = document.getElementById('due-date').value;
+//   const priority = document.getElementById('priority').value;
+
+//   // Here, you can add the logic to save the task to your backend or local storage.
+//   // For simplicity, we'll just add the task to the list for demonstration.
+
+//   const taskItem = document.createElement('li');
+//   taskItem.innerHTML = `
+//     <h3>${title}</h3>
+//     <p><strong>Priority:</strong> ${priority}</p>
+//     <p><strong>Due Date:</strong> ${dueDate}</p>
+//     <p>${description}</p>
+//     <button class="edit-btn">Edit</button>
+//     <button class="delete-btn">Delete</button>
+//   `;
+
+//   taskList.appendChild(taskItem);
+
+//   // Clear form fields after adding a task
+//   taskForm.reset();
+// });
 
         window.createPost = function () {
 
             let postTitle = document.querySelector("#postTitle").value;
             let postText = document.querySelector("#postText").value;
+            let duedate = document.querySelector("#duedate").value;
+            let priority = document.querySelector("#priority").value;
 
             // baseUrl/api/v1/post
             axios.post(`/api/v1/post`, {
                 title: postTitle,
-                text: postText
+                text: postText,
+                duedate: duedate,
+                priority: priority 
+                
             })
                 .then(function (response) {
                     console.log(response.data);
@@ -101,8 +260,10 @@
                             `<div id='card-${eachPost.id}' class="post-card">
                                 <h3>${eachPost.title}</h3>
                                 <p> ${eachPost.text} </p>
+                                <p> ${eachPost.duedate} </p>
+                                <p> ${eachPost.priority} </p>
                                 <button onclick="delPost('${eachPost.id}')">Delete</button>
-                                <button onclick="editPost('${eachPost.id}','${eachPost.title}','${eachPost.text}', )">Edit</button>
+                                <button onclick="editPost('${eachPost.id}','${eachPost.title}','${eachPost.text}','${eachPost.duedate}','${eachPost.priority}', )">Edit</button>
                             </div> 
                             <br />`
                     })
@@ -110,8 +271,8 @@
 
                     document.querySelector("#posts").innerHTML = postsHtml
                 })
-                .catch(function (error) {
-                    // handle error
+               .catch(function (error) {
+                //  handle error
                     console.log(error.data);
                     document.querySelector("#result").innerHTML = "error in post submission"
                 })
@@ -137,27 +298,55 @@
                 })
         }
 
-        window.editPost = (postId, title, text) => {
+        window.editPost = (postId, title, text, duedate, priority) => {
 
             console.log("delete: ", postId);
 
             document.querySelector(`#card-${postId}`).innerHTML =
-                `<form onsubmit="savePost('${postId}')">
-                    title: <input type='text' value='${title}' id='title-${postId}' />
-                    <br/>
-                    text: <input type='text' value='${text}' id='text-${postId}' />
-                    <br/>
-                    <button>Save</button>
+      `<form onsubmit="savePost('${postId}')">
+        title: <input type='text' value='${title}' id='title-${postId}' />
+        <br/>
+        text: <input type='text' value='${text}' id='text-${postId}' />
+        <br/>
+        duedate: <input type='date' value='${duedate}' id='duedate-${postId}' />
+        <br/>
+        <select id='priority-${postId}'>
+          <option value="High" ${priority === 'High' ? 'selected' : ''}>High</option>
+          <option value="Medium" ${priority === 'Medium' ? 'selected' : ''}>Medium</option>
+          <option value="Low" ${priority === 'Low' ? 'selected' : ''}>Low</option>
+        </select>
+        <button type="submit">Save</button>
+      </form>`;
+  
 
-                </form>`
+            // document.querySelector(`#card-${postId}`).innerHTML =
+            //     `<form onsubmit="savePost('${postId}')">
+            //         title: <input type='text' value='${title}' id='title-${postId}' />
+            //         <br/>
+            //         text: <input type='text' value='${text}' id='text-${postId}' />
+            //         <br/>
+            //         duedate: <input type='date' value='${duedate}' id='duedate-${postId}' />
+            //         <br/>
+            //         <select ' value='${priority}' id='priority-${postId}'>
+            //         <option value="High">High</option>
+            //         <option value="Medium">Medium</option>
+            //         <option value="Low">Low</option>
+            //         </select>
+            //         <button type="submit">Save</button>
+
+            //     </form>`
         }
         window.savePost = (postId)=>{
             const updatedTitle = document.querySelector(`#title-${postId}`).value;
             const updatedText = document.querySelector(`#text-${postId}`).value;
+            const updatedDate = document.querySelector(`#duedate-${postId}`).value;
+            const updatedPriority = document.querySelector(`#priority-${postId}`).value;
 
             axios.put(`/api/v1/post/${postId}`, {
                 title: updatedTitle,
-                text: updatedText
+                text: updatedText,
+                duedate: updatedDate,
+                priority: updatedPriority
             })
                 .then(function (response) {
                     console.log(response.data);
